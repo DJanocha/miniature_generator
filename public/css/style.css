@@ -1,0 +1,75 @@
+:root {
+    --scale: 0.57;
+    background-color: green;
+    display: grid;
+}
+
+body {}
+
+.phone {
+    max-width: 100vw;
+    max-height: 100vh;
+    width: 410px;
+    height: 720px;
+    border-radius: 60px;
+    margin: auto;
+    background-image: url("../images/smartphone.webp");
+    background-repeat: no-repeat;
+    display: grid;
+}
+
+.container {
+    grid-template-rows: repeat(6, 1fr);
+    display: grid;
+    max-width: minmax(auto, 500px);
+}
+
+.container a {
+    font-weight: 800;
+    font-size: 2rem;
+    opacity: 0.9;
+    margin: auto;
+    color: black;
+    text-decoration: none;
+}
+
+.container a:hover {
+    opacity: 1;
+    color: blue;
+}
+
+.container .element {
+    text-align: center;
+    align-self: center;
+    text-decoration: none;
+}
+
+.link {
+    font-size: 1.8rem;
+    background-color: transparent;
+    color: black;
+    opacity: 0.9;
+    font-weight: 800;
+    text-align: center;
+    border: none;
+}
+
+.container .link:hover {
+    color: blue;
+    cursor: pointer;
+    opacity: 1;
+}
+
+.container label {
+    align-self: center;
+    justify-content: center;
+}
+
+.choose-file:hover {
+    opacity: 1;
+    cursor: pointer;
+}
+
+input[type="file"] {
+    display: none;
+}
