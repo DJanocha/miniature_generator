@@ -56,9 +56,20 @@ router.post('/download/:name', async(req, res) => {
     if (name === '100' || name === '200' || name === '400') {
         res.send(fullname)
     } else {
-        res.status(500).json({ message: 'could not find given file' })
+        res.sendFile(path.join(__dirname, '..', '..', 'public', 'download.html'))
     }
 
+})
+
+router.get('/download/:width', (req, res) => {
+    const { width } = req.params;
+    const filePath = `${path.join(__dirname, '..','..','results', width)}.png`;
+    if ([100, 200, 400].includes(Number(width))) {
+
+        console.log(filePath);
+        res.download(filePath)
+    } else
+        res.send(`${filePath} doesn't exist`)
 })
 
 router.get('/', (req, res) => {

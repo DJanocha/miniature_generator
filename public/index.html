@@ -11,25 +11,21 @@
 
 <body>
     <div class="phone">
-        <div class="container">
+        <form class="container" action="/images" method="POST" enctype="multipart/form-data">
             <div class="element"></div>
             <div class="element"><label>Kliknij  w "wyslij plik" aby wybrac plik</label></div>
             <div class="element"><label>nastepnie w "generuj miniaturki"</label></div>
             <div class="element">
-                <form action="/images" method="POST" enctype="multipart/form-data">
-                    <div class="element link">
-                        <label class="link">
-                            <input type="file" name="originalImage">Wyslij plik</input>
-                        </label>
-                    </div>
-                    <div class="element link">
-                        <button class="link" type="submit">generuj miniaturki</button>
-                    </div>
-                </form>
+                <label class="link">
+                    <input type="file" name="originalImage">Wyslij plik</input>
+                </label>
             </div>
-        </div>
-
+            <div class="element">
+                <button class="link" type="submit">generuj miniaturki</button>
+            </div>
+        </form>
     </div>
+
 </body>
 
 </html>
