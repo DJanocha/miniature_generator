@@ -8,6 +8,8 @@ const sharp = require('sharp')
 const inputFolder = path.join(__dirname, "..", '..', 'upload')
 const outputFolder = path.join(__dirname, '..', '..', 'results')
 
+
+const availableWidths = [100, 200, 400];
 //multer configs:
 const storageStrategy = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -33,39 +35,28 @@ const upload = multer({
 //routes
 
 router.post('/images', upload.single('originalImage'), async(req, res) => {
-        const widths = [100, 200, 400];
-        console.log(req.file);
-
-
-        for (width of widths) {
-            await sharp(req.file.path).resize(width).toFile(path.join(outputFolder, `${width}.png`))
-
-        }
-        fs.unlinkSync(req.file.path)
-            // res.status(200).json({ message: "you posted an image" })
-        res.sendFile(path.join(__dirname, '..', '..', 'public', 'download.html'))
-
-    })
-    // router.get('/download', async(req,res)=>{
-    //     res.sendFile(path.join(__dirname, '..','..','public','download.html'))
-    // })
-router.post('/download/:name', async(req, res) => {
-    const name = req.params.name;
-    const fullname = path.join(outputFolder, name);
-    res.send(name)
-    if (name === '100' || name === '200' || name === '400') {
-        res.send(fullname)
-    } else {
-        res.sendFile(path.join(__dirname, '..', '..', 'public', 'download.html'))
-    }
-
+    if (!fs.existsSync(path.join(inputFolder, 'original.png')))
+        res.redirect('/restart')
+    console.log(req.file);
+    res.sendFile(path.join(__dirname, '..', '..', 'public', 'download.html'))
 })
 
-router.get('/download/:width', (req, res) => {
+router.get('/restart', (req, res) => {
+    const originalFilename = path.join(inputFolder, 'original.png')
+    if (fs.existsSync(originalFilename))
+        fs.unlinkSync(originalFilename)
+    for (w of availableWidths) {
+        const editedFilename = path.join(outputFolder, `${w}.png`)
+        if (fs.existsSync(editedFilename))
+            fs.unlinkSync(editedFilename)
+    }
+    res.sendFile(path.join(__dirname, '..', '..', 'public', 'index.html'))
+})
+router.get('/download/:width', async(req, res) => {
     const { width } = req.params;
-    const filePath = `${path.join(__dirname, '..','..','results', width)}.png`;
-    if ([100, 200, 400].includes(Number(width))) {
-
+    const filePath = `${path.join(__dirname, '..', '..', 'results', width)}.png`;
+    if (availableWidths.includes(Number(width))) {
+        await sharp(path.join(inputFolder, 'original.png')).resize(+width).toFile(path.join(outputFolder, `${width}.png`))
         console.log(filePath);
         res.download(filePath)
     } else
@@ -73,25 +64,7 @@ router.get('/download/:width', (req, res) => {
 })
 
 router.get('/', (req, res) => {
-    ///////////////////////////////////////////////////////////////////
-    //when coming to the new page, remove all the files uploaded before:
-    //doesn't work yet :/
-    fs.readdirSync(outputFolder, (err, files) => {
-        if (err) {
-            console.log('-------------------errr---------------------')
-            throw err;
-        }
-        for (file of files) {
-            console.log('-----------------------------')
-            console.log(file)
-            fs.unlink(path.join(outputFolder, file), error => {
-                if (error) throw error;
-            })
-        }
-    });
-    ///////////////////////////////////////////////
-    // console.log(__dirname);
-    res.sendFile(path.join(__dirname, '..', '..', 'public', 'index.html'));
+    res.redirect('/restart')
 })
 
 module.exports = router;
