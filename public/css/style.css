@@ -4,8 +4,6 @@
     display: grid;
 }
 
-body {}
-
 .phone {
     max-width: 100vw;
     max-height: 100vh;

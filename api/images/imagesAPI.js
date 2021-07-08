@@ -36,6 +36,7 @@ router.post('/images', upload.single('originalImage'), async(req, res) => {
         const widths = [100, 200, 400];
         console.log(req.file);
 
+
         for (width of widths) {
             await sharp(req.file.path).resize(width).toFile(path.join(outputFolder, `${width}.png`))
 
